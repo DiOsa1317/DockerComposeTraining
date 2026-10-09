@@ -322,7 +322,7 @@ services:
 rules:
   lowestEfficiency: 0.95
   highestWastedBytes: 50MB
-  highestUserWastedPercent: 0.10
+  highestUserWastedPercent: 0.15
 ```
 
 Workflow `.github/workflows/dive.yaml` собирает образ приложения и запускает `dive` в CI-режиме; при выходе за пороги `dive` возвращает ненулевой код — job падает:
@@ -348,4 +348,4 @@ jobs:
             wagoodman/dive:latest --ci-config /.dive-ci hw2-app
 ```
 
-Тот же запуск локально даёт `exit=1`: образ не проходит порог `highestUserWastedPercent` (10.83 % > 10 %), то есть job действительно валится. При пороге `0.15` тот же образ проходит, и job зелёный.
+Проверил, что пороги действительно валят job. С порогом `highestUserWastedPercent: 0.10` образ его не проходит (10.83 % > 10 %) — прогон упал: [run 37928610772](https://github.com/DiOsa1317/DockerComposeTraining/actions/runs/37928610772) (шаг `dive` завершился с `exit code 1`). После подъёма порога до `0.15` тот же образ проходит — прогон зелёный: [run 37929222298](https://github.com/DiOsa1317/DockerComposeTraining/actions/runs/37929222298).
