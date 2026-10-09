@@ -1,0 +1,20 @@
+name: dive-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  dive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build app image
+        run: docker build -t hw2-app ./app
+      - name: Run dive (CI, thresholds)
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD/.dive-ci:/.dive-ci:ro" \
+            -e CI=true \
+            wagoodman/dive:latest --ci-config /.dive-ci hw2-app

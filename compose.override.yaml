@@ -1,0 +1,12 @@
+services:
+  app:
+    develop:
+      watch:
+        - action: rebuild
+          path: ./app/requirements.txt
+        - action: sync+restart
+          path: ./app
+          target: /app
+          ignore:
+            - requirements.txt
+            - __pycache__/
